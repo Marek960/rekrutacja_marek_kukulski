@@ -23,6 +23,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        $this->app->tag(
+            [
+                ProductNameService::class,
+                SortNameService::class
+            ],
+            FilterInterface::class
+        );
     }
 }
