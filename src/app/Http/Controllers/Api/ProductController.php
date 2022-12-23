@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Price;
-use App\Services\Filters\FilterProvider;
+use App\Services\ProductService;
 
 class ProductController extends Controller
 {
@@ -21,42 +21,26 @@ class ProductController extends Controller
     /**
      * @return void
      */
-    public function __construct(FilterProvider $filterProvider)
+    public function __construct(ProductService $productService)
     {
         $this->product = new Product();
-        $this->price = new Price();
-        $this->filterProvider = $filterProvider;
+        $this->productService = $productService;
     }
 
     public function index(Request $request)
     {
-        $query = $this->product->query();
-        $query->with('prices');
-        $query = $this->filterProvider->search($request->all(), $query);
-
-        return $query->get(); 
+        $products = $this->productService->index($request->all());
+        return $products->get(); 
     }
 
     public function show($id)
     {
-        return $this->product->with('prices')->find($id);
+        return $this->productService->show($id);
     }
 
     public function store(Request $request)
     {
-        $product = $this->product->create([
-            'name' => $request->get('name'),
-            'description' => $request->get('description'),
-        ]);
-        $productId = $product->id;
-
-        foreach ($request->get('prices') as $price) {
-            $this->price->create([
-                'product_id' => $productId,
-                'price' => $price['price'],
-            ]);
-        }
-
+        $this->productService->store($request->all());
         return response()->json('Product added successfully');
     }
 
@@ -82,11 +66,7 @@ class ProductController extends Controller
 
     public function destroy(Request $request, $id)
     { 
-        $product = $this->product->find($id);
-        if ($product) {
-            $product->delete();
-            return response()->json('Product deleted successfully');
-        }
-        return response()->json('Data not found', 404); 
+        $this->productService->delete($id);
+        return response()->json('Product deleted successfully');
     }
 }

@@ -3,6 +3,9 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Services\Filters\ProductNameService;
+use App\Services\Filters\FilterInterface;
+use App\Services\Filters\SortNameService;
 
 class AppServiceProvider extends ServiceProvider
 {

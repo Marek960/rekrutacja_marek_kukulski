@@ -21,7 +21,7 @@ class ProductNameService implements FilterInterface
             return $query;
         }
         $name = $data[self::KEY] ?? null;
-
+      
         if ($name !== '') {
             return $query->where('name', 'like', '%' . $name . '%');
         }
