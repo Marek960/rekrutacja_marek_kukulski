@@ -23,7 +23,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/auth/register', [AuthController::class, 'createUser']);
 Route::post('/auth/login', [AuthController::class, 'loginUser']);
 Route::get('products', [ProductController::class, 'index']);
-Route::get('products/{id}', [ProductController::class, 'show']);
+Route::get('products/{id}', [ProductController::class, 'show'])->name('products.show');
 Route::post('products', [ProductController::class, 'store'])->middleware('auth:sanctum');
 Route::put('products/{id}', [ProductController::class, 'update'])->middleware('auth:sanctum');
 Route::delete('products/{id}', [ProductController::class, 'destroy'])->middleware('auth:sanctum');
