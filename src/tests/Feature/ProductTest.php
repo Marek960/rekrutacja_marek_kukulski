@@ -18,7 +18,7 @@ class ProductTest extends TestCase
             'description' => 'lampa ogrodowa'
         ]);
 
-        $response = $this->json('GET',route('api.products.index'));
+        $response = $this->json('get',route('api.products.index'));
         $response->assertStatus(200);
 
 
@@ -32,7 +32,7 @@ class ProductTest extends TestCase
             'description' => 'lampa ogrodowa'
         ]);
 
-        $response = $this->json('GET',route('api.products.show',['id' => $product->id]));
+        $response = $this->json('get',route('api.products.show',['id' => $product->id]));
         $response->assertStatus(200);
 
         $this->assertEquals('Lampa',$response->json()['name']);
@@ -46,7 +46,7 @@ class ProductTest extends TestCase
             'password' => bcrypt('secret1234')
         ]);
 
-        $response = $this->json('POST',route('api.login'),[
+        $response = $this->json('post',route('api.login'),[
             'email' => 'test80@gmail.com',
             'password' => 'secret1234',
         ]);
@@ -56,7 +56,7 @@ class ProductTest extends TestCase
         $token = $response['token'];
         $response = $this->withHeaders([
             'Authorization' => 'Bearer '. $token,
-        ])->json('POST',route('api.products.create'),[
+        ])->json('post',route('api.products.create'),[
             'name' => 'Kubek',
             'description' => 'Kubek swiateczny',
             'prices' => [
@@ -76,7 +76,7 @@ class ProductTest extends TestCase
             'password' => bcrypt('secret1234')
         ]);
 
-        $response = $this->json('POST',route('api.login'),[
+        $response = $this->json('post',route('api.login'),[
             'email' => 'test80@gmail.com',
             'password' => 'secret1234',
         ]);
@@ -92,26 +92,38 @@ class ProductTest extends TestCase
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer '. $token,
-        ])->json('PUT',route('api.products.update',['id' => $product['id']]),[
+        ])->json('put',route('api.products.update',['id' => $product['id']]),[
             'name' => 'Kubek1',
             'description' => 'Kubek swiateczny1',
         ]);
         $response->assertStatus(200);
     }
 
-    //Test the delete route
-    // public function testDelete(){
-    //     $token = $this->authenticate();
-    //     $recipe = Product::create([
-    //         'title' => 'Jollof Rice',
-    //         'procedure' => 'Parboil rice, get pepper and mix, and some spice and serve!'
-    //     ]);
-    //     $this->user->recipes()->save($recipe);
-    //     $response = $this->withHeaders([
-    //         'Authorization' => 'Bearer '. $token,
-    //     ])->json('POST',route('recipe.delete',['recipe' => $recipe->id]));
-    //     $response->assertStatus(200);
-    //     //Assert there are no recipes
-    //     $this->assertEquals(0,$this->user->recipes()->count());
-    // }
+    public function test_delete(){
+        $this->withoutExceptionHandling();
+        User::create([
+            'name' => 'test',
+            'email'=>'test88@gmail.com',
+            'password' => bcrypt('secret1234')
+        ]);
+
+        $response = $this->json('post',route('api.login'),[
+            'email' => 'test88@gmail.com',
+            'password' => 'secret1234',
+        ]);
+
+        $response->assertStatus(200);
+        $this->assertArrayHasKey('token',$response->json());
+        $token = $response['token'];
+
+        $product = Product::create([
+            'name' => 'Stol',
+            'description' => 'Stol ogrodowy'
+        ]);
+
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer '. $token,
+        ])->json('delete',route('api.products.delete',['id' => $product['id']]));
+        $response->assertStatus(200);
+    }
 }
