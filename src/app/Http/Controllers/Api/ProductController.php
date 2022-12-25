@@ -52,13 +52,14 @@ class ProductController extends Controller
             'description' => $request->get('description'),
         ]);
 
-
-        foreach ($request->get('prices') as $value) {
-            $price = $this->price->findOrFail($value['id']);
-
-            $price->update([
-                'price' => $value['price'],
-            ]);
+        if($request->get('prices')){
+            foreach ($request->get('prices') as $value) {
+                $price = $this->price->findOrFail($value['id']);
+    
+                $price->update([
+                    'price' => $value['price'],
+                ]);
+            }
         }
 
         return response()->json('Product update successfully');
