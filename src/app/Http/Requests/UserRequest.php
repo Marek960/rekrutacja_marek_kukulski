@@ -40,7 +40,7 @@ class UserRequest extends FormRequest
         ];
     }
 
-        public function messages()
+    public function messages()
     {
         return [
             'name.required' => __('Name field is required'),

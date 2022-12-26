@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Price;
 use App\Services\ProductService;
+use App\Http\Requests\ProductRequest;
 
 class ProductController extends Controller
 {
@@ -24,6 +25,7 @@ class ProductController extends Controller
     public function __construct(ProductService $productService)
     {
         $this->product = new Product();
+        $this->price = new Price();
         $this->productService = $productService;
     }
 
@@ -38,13 +40,13 @@ class ProductController extends Controller
         return $this->productService->show($id);
     }
 
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
         $this->productService->store($request->all());
         return response()->json('Product added successfully');
     }
 
-    public function update(Request $request, $id)
+    public function update(ProductRequest $request, $id)
     {
         $product = $this->product->with('prices')->findOrFail($id);
         $product->update([
