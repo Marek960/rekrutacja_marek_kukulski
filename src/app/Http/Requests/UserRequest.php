@@ -24,7 +24,7 @@ class UserRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $rules = [
             'name' => ['sometimes', 'required', 'string', 'max:255', Rule::unique('users')->where(function ($query) {
                 return $query->where('id', '<>', $this->id);
             })],
@@ -38,6 +38,15 @@ class UserRequest extends FormRequest
                 'regex:/[@$!%*#?&]/', // must contain a special character,
                 ]
         ];
+
+        if ($this->route()->uri !== 'api/auth/register') {
+            $rules = [
+                'email' => 'required',
+                'password' => 'required'
+            ];
+        }
+
+        return $rules;
     }
 
     public function messages()

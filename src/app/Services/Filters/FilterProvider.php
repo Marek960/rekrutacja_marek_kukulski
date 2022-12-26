@@ -11,7 +11,7 @@ class FilterProvider
      * @param $array $data
      * @return Builder
      */
-    public function search(array $data = [], $query): Builder
+    public function search(array $data = [], Builder $query): Builder
     {
         foreach (app()->tagged(FilterInterface::class) as $service) {
             $query = $service->search($data, $query); 

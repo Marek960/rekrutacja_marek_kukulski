@@ -2,13 +2,17 @@
 
 namespace App\Services;
 
-use Illuminate\Database\Eloquent\Builder;
 use App\Repositories\ProductRepository;
 use App\Models\Product;
 use App\Models\Price;
+use Illuminate\Database\Eloquent\Builder;
 
 class ProductService
 {
+    private $productRepository;
+    private $product;
+    private $price;
+
     public function __construct(ProductRepository $productRepository, Product $product, Price $price)
     {
         $this->productRepository = $productRepository;
@@ -16,21 +20,17 @@ class ProductService
         $this->price = $price;
     }
 
-    /**
-     * @param array $data
-     * @return Builder
-     */
-    public function index($data)
+    public function index(Array $data): Builder
     {
         return $this->productRepository->listProducts($data);
     }
 
-    public function show($id)
+    public function show(int $id): Product
     {
         return $this->productRepository->showProduct($id);
     }
 
-    public function store(Array $data)
+    public function store(Array $data): void
     {
         $product = $this->product->create([
             'name' => $data['name'],
@@ -46,27 +46,25 @@ class ProductService
         } 
     }
 
-    public function update(Request $request, $id)
+    public function update(array $data, int $id): void
     {
         $product = $this->product->with('prices')->findOrFail($id);
         $product->update([
-            'name' => $request->get('name'),
-            'description' => $request->get('description'),
+            'name' => $data['name'],
+            'description' => $data['description'],
         ]);
 
-
-        foreach ($request->get('prices') as $value) {
-            $price = $this->price->findOrFail($value['id']);
-
-            $price->update([
-                'price' => $value['price'],
-            ]);
+        foreach ( $data['prices'] as $value) {
+            $price = $this->price->find($value['id']);
+            if($price){
+                $price->update([
+                    'price' => $value['price'],
+                ]);
+            }
         }
-
-        return response()->json('Product update successfully');
     }
 
-    public function delete($id)
+    public function delete(int $id)
     {
         return $this->productRepository->deleteProduct($id); 
     }

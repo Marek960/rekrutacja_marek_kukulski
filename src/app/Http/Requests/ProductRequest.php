@@ -23,13 +23,21 @@ class ProductRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name' => ['sometimes', 'required', 'max:255', 'string', 'min:2'],
-            'description' => ['sometimes', 'required', 'max:255', 'string', 'min:1'],
-            'prices' => ['sometimes', 'required'],
-            'prices.*.price' => ['sometimes', 'required', 'integer'],
-            'prices.*.id' => ['sometimes', 'required', 'integer']
+        $rules = [
+            'name' => ['required', 'max:255', 'string', 'min:2'],
+            'description' => ['required', 'max:255', 'string', 'min:1'],
+            'prices' => ['required'],
+            'prices.*.price' => ['required', 'integer']
         ];
+
+        if (in_array($this->method(), ['PUT'])) {
+            $rules['prices.*.id'] = [
+                'required',
+                'integer'
+            ];
+        }
+
+        return $rules;
     }
 
     public function messages()
@@ -44,7 +52,8 @@ class ProductRequest extends FormRequest
             'description.string' => __('Description field must be a string'),
             'description.min:1' => __('Description field must be longer than 1 characters'),
             'prices.*.price.required' => __('Description field is required'),
-            'prices.*.price.float' => __('Description field must be a integer'),
+            'prices.*.price.integer' => __('Description field must be a integer'),
+            'prices.*.id.required' => __('Id price field is required'),
         ];
     }
 }
