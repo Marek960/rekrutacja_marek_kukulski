@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-// use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\Product;
@@ -12,7 +11,7 @@ class ProductTest extends TestCase
 {
     use RefreshDatabase;
     public function test_list(){
-        $product = Product::create([
+        Product::create([
             'name' => 'Lampa',
             'description' => 'lampa ogrodowa'
         ]);

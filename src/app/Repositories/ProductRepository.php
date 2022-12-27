@@ -10,14 +10,10 @@ use Illuminate\Database\Eloquent\Builder;
 
 class ProductRepository
 {
-    private $product;
-    private $filterProvider;
-
-    public function __construct(Product $product, FilterProvider $filterProvider)
-    {
-        $this->product = $product;
-        $this->filterProvider = $filterProvider;
-    }
+    public function __construct(
+        public Product $product, 
+        public FilterProvider $filterProvider
+    ) {}
 
     public function listProducts(array $data): Builder
     {
@@ -30,10 +26,10 @@ class ProductRepository
 
     public function showProduct(int $id): Product
     {
-        return $this->product->with('prices')->find($id);
+        return $this->product->with('prices')->findOrFail($id);
     }
 
-    public function deleteProduct(int $id)
+    public function deleteProduct(int $id): bool
     {
         return $this->product->with('prices')->findOrFail($id)->delete();
     }

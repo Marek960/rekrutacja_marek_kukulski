@@ -9,16 +9,11 @@ use Illuminate\Database\Eloquent\Builder;
 
 class ProductService
 {
-    private $productRepository;
-    private $product;
-    private $price;
-
-    public function __construct(ProductRepository $productRepository, Product $product, Price $price)
-    {
-        $this->productRepository = $productRepository;
-        $this->product = $product;
-        $this->price = $price;
-    }
+    public function __construct(
+        public ProductRepository $productRepository, 
+        public Product $product, 
+        public Price $price
+    ) {}
 
     public function index(Array $data): Builder
     {
@@ -46,25 +41,30 @@ class ProductService
         } 
     }
 
-    public function update(array $data, int $id): void
+    public function update(array $data, int $id): bool
     {
-        $product = $this->product->with('prices')->findOrFail($id);
-        $product->update([
-            'name' => $data['name'],
-            'description' => $data['description'],
-        ]);
+        $product = $this->product->with('prices')->find($id);
+        if ($product) {
+            $product->update([
+                'name' => $data['name'],
+                'description' => $data['description'],
+            ]);
 
-        foreach ( $data['prices'] as $value) {
-            $price = $this->price->find($value['id']);
-            if($price){
-                $price->update([
-                    'price' => $value['price'],
-                ]);
+            foreach ($data['prices'] as $value) {
+                $price = $this->price->find($value['id']);
+                if ($price) {
+                    $price->update([
+                        'price' => $value['price'],
+                    ]);
+                }
             }
+            return true;
+        } else {
+            return false;
         }
     }
 
-    public function delete(int $id)
+    public function delete(int $id): bool
     {
         return $this->productRepository->deleteProduct($id); 
     }
