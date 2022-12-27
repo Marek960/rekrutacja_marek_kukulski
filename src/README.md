@@ -1,85 +1,66 @@
-docker-compose up --build
-docker exec -it app bash
-composer i
-php artisan migrate
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-http://localhost:8080/
-# gdy pojawi sie problem z laravel.log permission denied
-# nalezy nadac odpowiednie uprawnienia w katalogu src poleceniami ponizej()
-sudo chown -R $USER:www-data storage
-chmod -R 775 storage
+<p align="center">
+<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+</p>
 
-#Następnie można wrócić do kontenera app i w nim uruchomić testy:
-php artisan test
+## About Laravel
 
+Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
+- [Simple, fast routing engine](https://laravel.com/docs/routing).
+- [Powerful dependency injection container](https://laravel.com/docs/container).
+- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
+- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
+- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
+- [Robust background job processing](https://laravel.com/docs/queues).
+- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-#API:
-# POST http://localhost:8080/api/auth/register - rejestracja Body->form-data
- name => Test1
- email => test1@gmail.com
- password => Test@123
+Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
- W odpowiedzi otrzymujemy:
- {
-    "status": true,
-    "message": "User Created Successfully",
-    "token": "6|VNQXA7La5sxPIaKGstNbmONP6GUwpycZsJGk6D7W"
-}
+## Learning Laravel
 
-# POST http://localhost:8080/api/auth/login - logowanie Body->form-data
- email => test1@gmail.com
- password => Test@123
+Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
- W odpowiedzi otrzymumemy:
- {
-    "status": true,
-    "message": "User Logged In Successfully",
-    "token": "7|cOnnY9eltxG73ihhdw1npviCDZjo4H9h5hKHRN01"
-}
+You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
 
-Token kopijemy i wklejamy do enpointów takich jak store, update, delete w Authorization. ustawiajac wczesniej Barer token.
+If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-# POST http://localhost:8080/api/products - dodawanie produktu Body->raw
+## Laravel Sponsors
 
-W headers ustawiamy Accept => application/json
+We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
 
-{
-   "name":"biurko",
-   "description": "opis biurka",
-   "prices":[
-      {
-         "price":5
-      },
-      {
-         "price":10
-      }
-   ]
-}
+### Premium Partners
 
-# GET http://localhost:8080/api/products - lista produktów
-Parametry do filtrów:
-name (string)
-sort_name (asc/desc)
-price (int)
-description (string)
+- **[Vehikl](https://vehikl.com/)**
+- **[Tighten Co.](https://tighten.co)**
+- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
+- **[64 Robots](https://64robots.com)**
+- **[Cubet Techno Labs](https://cubettech.com)**
+- **[Cyber-Duck](https://cyber-duck.co.uk)**
+- **[Many](https://www.many.co.uk)**
+- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
+- **[DevSquad](https://devsquad.com)**
+- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
+- **[OP.GG](https://op.gg)**
+- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
+- **[Lendio](https://lendio.com)**
 
-# GET http://localhost:8080/api/products/{id} - poglad produktu
+## Contributing
 
-# PUT http://localhost:8080/api/products/{id} - aktualizacja produktu Body->raw
-{
-   "name":"biurkoppp",
-   "description": "opis biurkappppp",
-   "prices":[
-      {
-        "id": 2,//należy podać id price
-        "price":505
-      },
-      {
-        "id": 3,////należy podać id price
-        "price":55
-      }
-   ]
-}
+Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-# DElETE http://localhost:8080/api/products/9 - usuwanie produktu
+## Code of Conduct
+
+In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+
+## Security Vulnerabilities
+
+If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+
+## License
+
+The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
