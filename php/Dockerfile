@@ -55,8 +55,3 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 RUN chown -R www-data:www-data .
 ADD . /var/www
-
-
-# sudo chown -R $USER:www-data storage
-# chmod -R 775 storage
-#  gdy pojawi sie problem z laravel.log permission denied
