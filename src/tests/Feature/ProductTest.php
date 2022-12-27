@@ -10,8 +10,7 @@ use App\Models\User;
 
 class ProductTest extends TestCase
 {
-    // use RefreshDatabase;
-
+    use RefreshDatabase;
     public function test_list(){
         $product = Product::create([
             'name' => 'Lampa',
@@ -86,15 +85,24 @@ class ProductTest extends TestCase
         $token = $response['token'];
 
         $product = Product::create([
-            'name' => 'Koszulka',
-            'description' => 'Koszulka swiateczna',
+            'name' => 'Kubek',
+            'description' => 'Kubek swiateczny',
+            'prices' => [
+                ['price' => 777]
+            ]
         ]);
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer '. $token,
         ])->json('put',route('api.products.update',['id' => $product['id']]),[
-            'name' => 'Kubek1',
-            'description' => 'Kubek swiateczny1',
+            'name' => 'Kubek',
+            'description' => 'Kubek swiateczny',
+            'prices' => [
+                [
+                    'id' => 1,
+                    'price' => 771
+                ]
+            ]
         ]);
         $response->assertStatus(200);
     }
