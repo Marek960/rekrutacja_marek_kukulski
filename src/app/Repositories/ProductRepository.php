@@ -5,18 +5,21 @@ declare(strict_types=1);
 namespace App\Repositories;
 
 use App\Models\Product;
-use Illuminate\Database\Eloquent\Collection;
 use App\Services\Filters\FilterProvider;
+use Illuminate\Database\Eloquent\Builder;
 
 class ProductRepository
 {
+    private $product;
+    private $filterProvider;
+
     public function __construct(Product $product, FilterProvider $filterProvider)
     {
         $this->product = $product;
         $this->filterProvider = $filterProvider;
     }
 
-    public function listProducts($data)
+    public function listProducts(array $data): Builder
     {
         $query = $this->product->query();
         $query->with('prices');
@@ -25,13 +28,13 @@ class ProductRepository
         return $query;
     }
 
-    public function showProduct($id)
+    public function showProduct(int $id): Product
     {
         return $this->product->with('prices')->find($id);
     }
 
-    public function deleteProduct($id)
+    public function deleteProduct(int $id)
     {
-        return $this->product->with('prices')->find($id)->delete();
+        return $this->product->with('prices')->findOrFail($id)->delete();
     }
 }

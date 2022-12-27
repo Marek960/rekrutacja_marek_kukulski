@@ -11,11 +11,8 @@ class SortNameService implements FilterInterface
      * @var string
      */
     private const KEY = 'sort_name';
-    /**
-     * @param array $data
-     * @return Builder
-     */
-    public function search($data, $query): Builder
+
+    public function search(array $data, Builder $query): Builder
     {
         if (!array_key_exists(self::KEY, $data)) {
             return $query;
