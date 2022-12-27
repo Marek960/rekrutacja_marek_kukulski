@@ -69,7 +69,7 @@ sort_name (asc/desc)
 price (int)
 description (string)
 
-# GET http://localhost:8080/api/products/{id} - poglad produktu
+# GET http://localhost:8080/api/products/{id} - podglad produktu
 
 # PUT http://localhost:8080/api/products/{id} - aktualizacja produktu Body->raw
 {
