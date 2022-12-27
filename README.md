@@ -7,8 +7,9 @@ composer i
 php artisan migrate
 
 http://localhost:8080/
-# gdy pojawi sie problem z laravel.log permission denied
-# nalezy nadac odpowiednie uprawnienia w katalogu src poleceniami ponizej()
+gdy pojawi sie problem z laravel.log permission denied
+nalezy nadac odpowiednie uprawnienia w katalogu src poleceniami ponizej
+
 sudo chown -R $USER:www-data storage
 chmod -R 775 storage
 
@@ -17,7 +18,8 @@ php artisan test
 
 
 
-#API:
+# API:
+Przykładowe żądania i odpowiedzi
 # POST http://localhost:8080/api/auth/register - rejestracja Body->form-data
  name => Test1
  email => test1@gmail.com
@@ -85,4 +87,4 @@ description (string)
    ]
 }
 
-# DElETE http://localhost:8080/api/products/9 - usuwanie produktu
+# DELETE http://localhost:8080/api/products/9 - usuwanie produktu
