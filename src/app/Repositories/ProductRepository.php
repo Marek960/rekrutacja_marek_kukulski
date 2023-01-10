@@ -8,29 +8,21 @@ use App\Models\Product;
 use App\Services\Filters\FilterProvider;
 use Illuminate\Database\Eloquent\Builder;
 
-class ProductRepository
+class ProductRepository extends BaseRepository
 {
     public function __construct(
-        public Product $product, 
+        Product $model, 
         public FilterProvider $filterProvider
-    ) {}
+    ) {
+        $this->model = $model;
+    }
 
     public function listProducts(array $data): Builder
     {
-        $query = $this->product->query();
+        $query = $this->model->query();
         $query->with('prices');
         $query = $this->filterProvider->search($data, $query);
       
         return $query;
-    }
-
-    public function showProduct(int $id): Product
-    {
-        return $this->product->with('prices')->findOrFail($id);
-    }
-
-    public function deleteProduct(int $id): bool
-    {
-        return $this->product->with('prices')->findOrFail($id)->delete();
     }
 }

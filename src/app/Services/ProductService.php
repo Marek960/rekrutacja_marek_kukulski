@@ -3,16 +3,15 @@
 namespace App\Services;
 
 use App\Repositories\ProductRepository;
+use App\Repositories\PriceRepository;
 use App\Models\Product;
-use App\Models\Price;
 use Illuminate\Database\Eloquent\Builder;
 
 class ProductService
 {
     public function __construct(
         public ProductRepository $productRepository, 
-        public Product $product, 
-        public Price $price
+        public PriceRepository $priceRepository
     ) {}
 
     public function index(Array $data): Builder
@@ -20,42 +19,42 @@ class ProductService
         return $this->productRepository->listProducts($data);
     }
 
-    public function show(int $id): Product
+    public function show(int $id): Product|null
     {
-        return $this->productRepository->showProduct($id);
+        return $this->productRepository->with('prices')->find($id);
     }
 
     public function store(Array $data): void
     {
-        $product = $this->product->create([
-            'name' => $data['name'],
-            'description' => $data['description'],
-        ]);
+        $product = $this->productRepository->create(
+            ['name' => $data['name'], 'description' => $data['description']]
+        );
         $productId = $product->id;
 
         foreach ($data['prices'] as $price) {
-            $this->price->create([
-                'product_id' => $productId,
-                'price' => $price['price'],
-            ]);
+            $product = $this->priceRepository->create(
+                ['product_id' => $productId, 'price' => $price['price']]
+            );
         } 
     }
 
     public function update(array $data, int $id): bool
     {
-        $product = $this->product->with('prices')->find($id);
+        $product = $this->productRepository->with('prices')->find($id);
         if ($product) {
-            $product->update([
-                'name' => $data['name'],
-                'description' => $data['description'],
-            ]);
-
+            $this->productRepository->update(
+                ['name' => $data['name'], 'description' => $data['description']], $id
+            );
             foreach ($data['prices'] as $value) {
-                $price = $this->price->find($value['id']);
-                if ($price) {
-                    $price->update([
-                        'price' => $value['price'],
-                    ]);
+                if ($this->priceRepository->find($value['id'])) {
+                    $price = $this->priceRepository->find($value['id']);
+                    if ($price) {
+                        $this->priceRepository->update(
+                            [ 'price' => $value['price']], $value['id']
+                        );
+                    }
+                } else {
+                    return false;
                 }
             }
             return true;
@@ -66,6 +65,6 @@ class ProductService
 
     public function delete(int $id): bool
     {
-        return $this->productRepository->deleteProduct($id); 
+        return $this->productRepository->delete($id); 
     }
 }

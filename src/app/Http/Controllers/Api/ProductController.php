@@ -30,9 +30,13 @@ class ProductController extends Controller
         }
     }
 
-    public function show(int $id): Product
+    public function show(int $id): Product|JsonResponse
     {
-        return $this->productService->show($id);
+        if ($this->productService->show($id)) {
+            return $this->productService->show($id);
+        } else {
+            return response()->json('No data');
+        }
     }
 
     public function store(ProductRequest $request): JsonResponse
@@ -52,7 +56,10 @@ class ProductController extends Controller
 
     public function destroy(Request $request, int $id): JsonResponse
     { 
-        $this->productService->delete($id);
-        return response()->json('Product deleted successfully');
+        if ($this->productService->delete($id)) {
+            return response()->json('Product deleted successfully');
+        } else {
+            return response()->json('No data');
+        }
     }
 }
